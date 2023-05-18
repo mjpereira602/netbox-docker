@@ -1,0 +1,25 @@
+version: '3.4'
+services:
+  netbox: &netbox
+    volumes:
+    - ./configuration:/etc/netbox/config:ro
+    - netbox-media-files:/opt/netbox/netbox/media:rw
+    - netbox-reports-files:/opt/netbox/netbox/reports:rw
+    - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
+  netbox-worker:
+    <<: *netbox
+  netbox-housekeeping:
+    <<: *netbox
+  postgres:
+    volumes:
+    - netbox-postgres-data:/var/lib/postgresql/data:rw
+    - ./postgres_init.d:/docker-entrypoint-initdb.d:ro
+  redis:
+    volumes:
+    - netbox-redis-data:/data:rw
+  redis-cache:
+    volumes:
+    - netbox-redia-cache-data:/data:rw
+  mariadb:
+    volumes:
+    - ./mariadb_init.d:/docker-entrypoint-initdb.d:ro
