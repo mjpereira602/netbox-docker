@@ -50,7 +50,7 @@ services:
     image: docker.io/postgres:15-alpine
     env_file: env/postgres.env
     volumes:
-    - netbox-postgres-data:/var/lib/postgresql/data
+    - netbox-postgres-data:/var/lib/postgresql/data:Z,rw
 
   # redis
   redis:
@@ -61,7 +61,7 @@ services:
     - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
     volumes:
-    - netbox-redis-data:/data
+    - netbox-redis-data:/data:Z,rw
   redis-cache:
     image: docker.io/redis:7-alpine
     command:
@@ -70,7 +70,7 @@ services:
     - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis-cache.env
     volumes:
-    - netbox-redis-cache-data:/data
+    - netbox-redis-cache-data:/data:Z,rw
 
 volumes:
   netbox-media-files:

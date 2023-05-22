@@ -2,7 +2,7 @@ from importlib import import_module
 from os import environ
 
 import ldap
-from django_auth_ldap.config import LDAPSearch
+from django_auth_ldap.config import LDAPSearch, LDAPGroupQuery
 
 
 # Read secret from file

@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  netbox:
+    environment:
+      REMOTE_AUTH_ENABLED: 'true'
+      REMOTE_AUTH_BACKEND: 'netbox.authentication.LDAPBackend'
+      AUTH_LDAP_SERVER_URI: "ldaps://idm-01a.lab1.bandwidthclec.local"
+      AUTH_LDAP_BIND_AS_AUTHENTICATING_USER: "true"
+      AUTH_LDAP_USER_DN_TEMPLATE: "uid=%(user)s,cn=users,cn=accounts,dc=bandwidthclec,dc=com"
+      LDAP_IGNORE_CERT_ERRORS: 'true'
+      AUTH_LDAP_GROUP_SEARCH_BASEDN: 'cn=groups,cn=accounts,dc=bandwidthclec,dc=com'
+      AUTH_LDAP_GROUP_SEARCH_FILTER: '(&(cn:dn:=groups))'
+      AUTH_LDAP_MIRROR_GROUPS: 'true'
+      LOGLEVEL: "DEBUG"
+      DB_WAIT_DEBUG: 1

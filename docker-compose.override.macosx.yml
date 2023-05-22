@@ -2,7 +2,7 @@ version: '3.4'
 services:
   netbox: &netbox
     volumes:
-    - ./configuration:/etc/netbox/config:ro
+    - ././configuration:/etc/netbox/config:ro
     - netbox-media-files:/opt/netbox/netbox/media:rw
     - netbox-reports-files:/opt/netbox/netbox/reports:rw
     - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
@@ -19,7 +19,7 @@ services:
     - netbox-redis-data:/data:rw
   redis-cache:
     volumes:
-    - netbox-redia-cache-data:/data:rw
+    - netbox-redis-cache-data:/data:rw
   mariadb:
     volumes:
     - ./mariadb_init.d:/docker-entrypoint-initdb.d:ro

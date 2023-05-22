@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  mariadb:
+    image: mariadb:10.3
+    command: [
+      '--net_read_timeout=31536000',
+      '--net_write_timeout=31536000',
+      '--max_allowed_packet=1073741824',
+      '--connect_timeout=1000'
+    ]
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: racktables_db
+      MARIADB_USER: ap_racktables
+      MARIADB_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+    - ./mariadb_init.d:/docker-entrypoint-initdb.d:z,ro

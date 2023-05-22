@@ -26,3 +26,17 @@
 
 # # Sets LDAP Mirror groups variables with example groups
 # AUTH_LDAP_MIRROR_GROUPS = ["netbox-user-ro", "netbox-user-rw", "netbox-user-admin"]
+
+from django_auth_ldap.config import LDAPGroupQuery # Imported since not in ldap_config.py
+from os import environ
+import json
+
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    'is_active': 'cn=ipausers,cn=groups,cn=accounts,dc=bandwidthclec,dc=com',
+    'is_staff': (
+        LDAPGroupQuery('cn=ad-systems_infrastructure,cn=groups,cn=accounts,dc=bandwidthclec,dc=com')
+        | LDAPGroupQuery('cn=ad-network_engineering ,cn=groups,cn=accounts,dc=bandwidthclec,dc=com')
+        | LDAPGroupQuery('cn=ad-bwi-infra_network,cn=groups,cn=accounts,dc=bandwidthclec,dc=com')
+    ),
+    'is_superuser': 'cn=ad-systems_infrastructure,cn=groups,cn=accounts,dc=bandwidthclec,dc=com'
+}
