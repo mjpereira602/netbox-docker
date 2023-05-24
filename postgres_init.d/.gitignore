@@ -1,0 +1,4 @@
+*
+!.gitignore
+!98_reset_admin_pw.sql
+!99_reset_admin_token.sql
