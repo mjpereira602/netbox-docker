@@ -1,0 +1,5 @@
+version: '3.4'
+services:
+  netbox:
+    environment:
+      NETBOX_DELETE_LEGACY_DATA: 1

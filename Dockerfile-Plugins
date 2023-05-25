@@ -1,0 +1,15 @@
+FROM netboxcommunity/netbox:v3.5-2.6.1
+
+COPY ./requirements-container-plugins.txt /
+
+#RUN export DEBIAN_FRONTEND=noninteractive \
+#  && apt-get update -qq \
+#  && apt-get upgrade --yes -qq --no-install-recommends \
+#  && apt-get install --yes -qq --no-install-recommends git
+
+RUN /opt/netbox/venv/bin/pip install -r /requirements-container-plugins.txt
+
+COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+
+RUN SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input

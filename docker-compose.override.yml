@@ -1,6 +1,10 @@
 version: '3.4'
 services:
   netbox:
+    image: netbox:v3.5-2.6.1-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
     ports:
       - "8000:8080"
     # If you want the Nginx unit status page visible from the
@@ -21,6 +25,10 @@ services:
       SUPERUSER_NAME: "admin"
       SUPERUSER_PASSWORD: "admin"
       ENFORCE_GLOBAL_UNIQUE: true
+  netbox-woker:
+    image: netbox:v3.5-2.6.1-plugins
+  netbox-housekeeping:
+    image: netbox:v3.5-2.6.1-plugins
   postgres:
     ports:
       - 5432:5432
