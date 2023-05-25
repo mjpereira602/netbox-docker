@@ -1,6 +1,10 @@
 version: '3.4'
 services:
   netbox:
+    image: netbox:v3.1-1.6.0-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
     ports:
       - "8000:8080"
     environment:
@@ -10,6 +14,16 @@ services:
       SUPERUSER_NAME: "admin"
       SUPERUSER_PASSWORD: "admin"
       ENFORCE_GLOBAL_UNIQUE: true
+  netbox-worker:
+    image: netbox:v3.1-1.6.0-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+  netbox-housekeeping:
+    image: netbox:v3.1-1.6.0-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
   postgres:
     ports:
       - 5432:5432
