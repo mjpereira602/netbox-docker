@@ -1,0 +1,9 @@
+FROM netboxcommunity/netbox:v3.4-2.5.3
+
+COPY ./requirements-container-plugins.txt /
+RUN /opt/netbox/venv/bin/pip install --no-warn-script-location -r /requirements-container-plugins.txt
+
+COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+
+RUN SECRET_KEY="dummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
