@@ -1,6 +1,12 @@
 FROM netboxcommunity/netbox:v3.4-2.5.3
 
 COPY ./requirements-container-plugins.txt /
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update -qq \
+  && apt-get upgrade --yes -qq --no-install-recommends \
+  && apt-get install --yes -qq --no-install-recommends git
+
 RUN /opt/netbox/venv/bin/pip install --no-warn-script-location -r /requirements-container-plugins.txt
 
 COPY configuration/configuration.py /etc/netbox/config/configuration.py
