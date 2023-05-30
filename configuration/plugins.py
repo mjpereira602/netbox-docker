@@ -5,9 +5,11 @@
 # See https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
 
 PLUGINS = [
-  "netbox_secretstore"
+  "netbox_secretstore",
+  "netbox_secrets"
 ]
 
 PLUGINS_CONFIG = {
-  "netbox_secretstore": {}
+  "netbox_secretstore": {},
+  "netbox_secrets: {}
 }

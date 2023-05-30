@@ -1,1 +1,2 @@
 git+https://github.com/Onemind-Services-LLC/netbox-secretstore@migration/nb34
+git+https://github.com/Onemind-Services-LLC/netbox-secrets.git@v1.7.6
