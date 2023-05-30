@@ -11,5 +11,5 @@ PLUGINS = [
 
 PLUGINS_CONFIG = {
   "netbox_secretstore": {},
-  "netbox_secrets: {}
+  "netbox_secrets": {}
 }
