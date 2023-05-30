@@ -51,6 +51,5 @@ exec unitd \
   --control unix:$UNIT_SOCKET \
   --pid /opt/unit/unit.pid \
   --log /dev/stdout \
-  --tmp /opt/unit/tmp/ \
   --user unit \
   --group root

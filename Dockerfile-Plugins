@@ -1,6 +1,7 @@
 FROM netboxcommunity/netbox:v3.4-2.5.3
 
 COPY ./requirements-container-plugins.txt /
+COPY docker/launch-netbox.sh /opt/netbox/launch-netbox.sh
 
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update -qq \
