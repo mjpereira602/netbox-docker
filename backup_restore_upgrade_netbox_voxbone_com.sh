@@ -9,10 +9,10 @@
   #
   
   # With secrets
-  #ssh netbox-001.vit.pod2.cloud.voxbone.com \
-  #  "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
-  #  --no-owner --no-privileges" \
-  #  | gzip > backups/voxbone_backup.sql.gz
+  ssh netbox-001.vit.pod2.cloud.voxbone.com \
+    "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
+    --no-owner --no-privileges" \
+    | gzip > backups/voxbone_backup.sql.gz
   cp backups/voxbone_backup.sql.gz postgres_init.d/50_init.sql.gz
   
   # Without secrets
@@ -137,8 +137,7 @@ SQL
   #
   # backup upgraded voxbone database
   #
-  cd ..
-  pg_dump -Z9 -f state/voxbone_upgraded_backup.sql.gz --dbname=postgresql://netbox:J5brHrAXFLQSif0K@127.0.0.1:5432/netbox
+  pg_dump -Z9 -f backups/voxbone_upgraded_backup.sql.gz --dbname=postgresql://netbox:J5brHrAXFLQSif0K@127.0.0.1:5432/netbox
   
   exit
 }
