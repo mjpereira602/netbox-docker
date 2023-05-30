@@ -25,7 +25,7 @@ services:
       SUPERUSER_NAME: "admin"
       SUPERUSER_PASSWORD: "admin"
       ENFORCE_GLOBAL_UNIQUE: true
-  netbox-woker:
+  netbox-worker:
     image: netbox:v3.5-2.6.1-plugins
   netbox-housekeeping:
     image: netbox:v3.5-2.6.1-plugins
