@@ -10,7 +10,7 @@
   
   # With secrets
   #ssh netbox-001.vit.pod2.cloud.voxbone.com \
-  #  "pg_dump --dbname=postgresql://netbox:${VOXBONE_NETBOX_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
+  #  "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
   #  --no-owner --no-privileges" \
   #  | gzip > backups/voxbone_backup.sql.gz
   cp backups/voxbone_backup.sql.gz postgres_init.d/50_init.sql.gz
@@ -92,9 +92,28 @@
   
   while ! curl -s -X GET http://localhost:8000 > /dev/null; do sleep 5; done
 
-  # netbox-secretstore to netbox-secrets sqlsequence reset
-  exit 
- 
+  # Finish netbox-secretstore to netbox-secrets migration
+  echo "BEGIN;" > secretstore_cleanup.sql
+
+  podman exec -it netbox-docker_netbox_1 /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py \
+  sqlsequencereset netbox_secrets | \
+  sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | \
+  sed '1,/BEGIN;/d' | \
+  sed "/COMMIT;/d" >> secretstore_cleanup.sql
+
+  cat >> secretstore_cleanup.sql <<SQL
+DROP TABLE IF EXISTS netbox_secretstore_secret;
+DROP TABLE IF EXISTS netbox_secretstore_secretrole;
+DROP TABLE IF EXISTS netbox_secretstore_sessionkey;
+DROP TABLE IF EXISTS netbox_secretstore_userkey;
+COMMIT;
+SQL
+
+  podman cp secretstore_cleanup.sql netbox-docker_postgres_1:/secretstore_cleanup.sql
+  rm secretstore_cleanup.sql
+
+  podman exec -it netbox-docker_postgres_1 psql --user netbox --dbname netbox -f /secretstore_cleanup.sql
+
   ##
   ## backup database (overwriting our initial backup)
   ##
