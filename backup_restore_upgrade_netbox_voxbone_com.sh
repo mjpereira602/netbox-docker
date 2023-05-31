@@ -36,7 +36,7 @@
   git checkout bandwidth-3.1-1.6.0
   git pull --set-upstream origin bandwidth-3.1-1.6.0
 
-  podman-compose ${overrides} build --no-cache netbox
+  podman-compose ${overrides} build 
   podman-compose ${overrides} up --no-start
   podman-compose ${overrides} start
   
@@ -86,7 +86,7 @@
   git checkout bandwidth-3.4-2.5.3
   git pull --set-upstream origin bandwidth-3.4-2.5.3
   
-  podman-compose ${overrides} -f docker-compose.override.upgrade.yml build --no-cache netbox
+  podman-compose ${overrides} -f docker-compose.override.upgrade.yml build 
   podman-compose ${overrides} -f docker-compose.override.upgrade.yml up --no-start
   podman-compose ${overrides} -f docker-compose.override.upgrade.yml start
   
@@ -128,7 +128,7 @@ SQL
   git checkout bandwidth
   git pull --set-upstream origin bandwidth
 
-  podman-compose ${overrides} -f docker-compose.override.upgrade.yml build --no-cache netbox
+  podman-compose ${overrides} -f docker-compose.override.upgrade.yml build 
   podman-compose ${overrides} -f docker-compose.override.upgrade.yml up --no-start
   podman-compose ${overrides} -f docker-compose.override.upgrade.yml start
   
