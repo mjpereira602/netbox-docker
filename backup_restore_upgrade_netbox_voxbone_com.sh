@@ -138,6 +138,7 @@ SQL
   # backup upgraded voxbone database
   #
   pg_dump -Z9 -f backups/voxbone_upgraded_backup.sql.gz --dbname=postgresql://netbox:J5brHrAXFLQSif0K@127.0.0.1:5432/netbox
+  rm postgres_init.d/50_init.sql.gz
   
   exit
 }
