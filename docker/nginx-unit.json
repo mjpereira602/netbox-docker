@@ -1,10 +1,22 @@
 {
   "listeners": {
     "0.0.0.0:8080": {
-      "pass": "routes/main"
+      "pass": "routes/redirect"
     },
     "[::]:8080": {
-      "pass": "routes/main"
+      "pass": "routes/redirect"
+    },
+    "0.0.0.0:8443": {
+      "pass": "routes/main",
+      "tls": {
+        "certificate": "bundle"
+      }
+    },
+    "[::]:8443": {
+      "pass": "routes/main",
+      "tls": {
+        "certificate": "bundle"
+      }
     },
     "0.0.0.0:8081": {
       "pass": "routes/status"
@@ -14,6 +26,14 @@
     }
   },
   "routes": {
+    "redirect": [
+      {
+        "action": {
+          "return": 301,
+          "location": "https://${host}:8443${request_uri}"
+        }
+      }
+    ],
     "main": [
       {
         "match": {

@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile-Plugins
     ports:
       - "8000:8080"
+      - "8443:8443"
     # If you want the Nginx unit status page visible from the
     # outside of the container add the following port mapping:
     # - "8001:8081"
@@ -25,12 +26,22 @@ services:
       SUPERUSER_NAME: "admin"
       SUPERUSER_PASSWORD: "admin"
       ENFORCE_GLOBAL_UNIQUE: true
+    secrets:
+      - cert_bundle 
   netbox-worker:
     image: netbox:v3.5-2.6.1-plugins
+    secrets:
+      - cert_bundle 
   netbox-housekeeping:
     image: netbox:v3.5-2.6.1-plugins
+    secrets:
+      - cert_bundle 
   postgres:
     ports:
       - 5432:5432
     volumes:
     - ./postgres_init.d:/docker-entrypoint-initdb.d:z,ro
+
+secrets:
+  cert_bundle:
+    file: secrets/bundle.pem
