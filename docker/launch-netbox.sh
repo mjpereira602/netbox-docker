@@ -23,29 +23,6 @@ load_configuration() {
   # this curl call will get a reply once unit is fully launched
   curl --silent --output /dev/null --request GET --unix-socket $UNIT_SOCKET http://localhost/
 
-  # Install certificate bundle
-  if [[ -r /run/secrets/cert_bundle ]]
-  then
-    echo "⚙️ Loading ssl cert bundle"
-  
-    RESP_CODE=$(
-      curl \
-        --silent \
-        --output /dev/null \
-        --write-out '%{http_code}' \
-        --request PUT \
-        --data-binary "@/run/secrets/cert_bundle" \
-        --unix-socket $UNIT_SOCKET \
-        http://localhost/certificates/bundle
-    )
-    if [ "$RESP_CODE" != "200" ]; then
-      echo "⚠️ Could not load ssl cert bundle"
-      kill "$(cat /opt/unit/unit.pid)"
-      return 1
-    fi
-    echo "✅ ssl cert bundle uploaded successfully"
-  fi
-
   echo "⚙️ Applying configuration from $UNIT_CONFIG"
 
   RESP_CODE=$(
@@ -59,7 +36,7 @@ load_configuration() {
       http://localhost/config
   )
   if [ "$RESP_CODE" != "200" ]; then
-    echo "⚠️ Could not load Unit configuration"
+    echo "⚠️ Could no load Unit configuration"
     kill "$(cat /opt/unit/unit.pid)"
     return 1
   fi

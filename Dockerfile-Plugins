@@ -1,8 +1,6 @@
 FROM netboxcommunity/netbox:v3.5-2.6.1
 
 COPY ./requirements-container-plugins.txt /
-COPY docker/launch-netbox.sh /opt/netbox/launch-netbox.sh
-COPY docker/nginx-unit.json /etc/unit/
 
 #RUN export DEBIAN_FRONTEND=noninteractive \
 #  && apt-get update -qq \
