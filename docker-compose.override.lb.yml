@@ -1,0 +1,7 @@
+version: '3.4'
+services:
+  netbox:
+    ports:
+      - '127.0.0.1::8080'
+    labels:
+      - 'traefik.enable=true'

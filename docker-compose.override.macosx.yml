@@ -23,3 +23,4 @@ services:
   mariadb:
     volumes:
     - ./mariadb_init.d:/docker-entrypoint-initdb.d:ro
+  

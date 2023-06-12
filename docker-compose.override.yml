@@ -1,47 +1,44 @@
 version: '3.4'
 services:
   netbox:
-    image: netbox:v3.5-2.6.1-plugins
-    build:
-      context: .
-      dockerfile: Dockerfile-Plugins
-    ports:
-      - "8000:8080"
-      - "8443:8443"
     # If you want the Nginx unit status page visible from the
     # outside of the container add the following port mapping:
     # - "8001:8081"
-    # healthcheck:
-      # Time for which the health check can fail after the container is started.
-      # This depends mostly on the performance of your database. On the first start,
-      # when all tables need to be created the start_period should be higher than on
-      # subsequent starts. For the first start after major version upgrades of NetBox
-      # the start_period might also need to be set higher.
-      # Default value in our docker-compose.yml is 60s
-      # start_period: 90s
-    environment:
-      SKIP_SUPERUSER: "false"
-      SUPERUSER_API_TOKEN: "0123456789abcdef0123456789abcdef01234567"
-      SUPERUSER_EMAIL: "admin@example.com"
-      SUPERUSER_NAME: "admin"
-      SUPERUSER_PASSWORD: "admin"
+    environment: &netbox_environment
+      SKIP_SUPERUSER: "${SKIP_SUPERUSER-false}"
+      SUPERUSER_API_TOKEN: "${SUPERUSER_API_TOKEN-0123456789abcdef0123456789abcdef01234567}"
+      SUPERUSER_EMAIL: "${SUPERUSER_EMAIL-admin@example.com}"
+      SUPERUSER_NAME: "${SUPERUSER_NAME-admin}"
+      SUPERUSER_PASSWORD: "${SUPERUSER_PASSWORD-admin}"
       ENFORCE_GLOBAL_UNIQUE: true
-    secrets:
-      - cert_bundle 
+      REMOTE_AUTH_ENABLED: 'true'
+      REMOTE_AUTH_BACKEND: 'netbox.authentication.LDAPBackend'
+      AUTH_LDAP_SERVER_URI: "${AUTH_LDAP_SERVER_URI}"
+      AUTH_LDAP_BIND_AS_AUTHENTICATING_USER: "true"
+      AUTH_LDAP_USER_DN_TEMPLATE: "${AUTH_LDAP_USER_DN_TEMPLATE}"
+      LDAP_IGNORE_CERT_ERRORS: 'true'
+      AUTH_LDAP_GROUP_SEARCH_BASEDN: "${AUTH_LDAP_GROUP_SEARCH_BASEDN}"
+      AUTH_LDAP_GROUP_SEARCH_FILTER: '(&(cn:dn:=groups))'
+      AUTH_LDAP_MIRROR_GROUPS: 'true'
+      REDIS_PASSWORD: "${REDIS_PASSWORD-H733Kdjndks81}"
+      REDIS_CACHE_PASSWORD: "${REDIS_CACHE_PASSWORD-t4Ph722qJ5QHeQ1qfu36}"
+      DB_PASSWORD: "${POSTGRES_PASSWORD-J5brHrAXFLQSif0K}"
+      #LOGLEVEL: "DEBUG"
+      #DB_WAIT_DEBUG: 1
   netbox-worker:
-    image: netbox:v3.5-2.6.1-plugins
-    secrets:
-      - cert_bundle 
+    environment:
+      <<: *netbox_environment
   netbox-housekeeping:
-    image: netbox:v3.5-2.6.1-plugins
-    secrets:
-      - cert_bundle 
+    environment:
+      <<: *netbox_environment
   postgres:
-    ports:
-      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD-J5brHrAXFLQSif0K}"
     volumes:
-    - ./postgres_init.d:/docker-entrypoint-initdb.d:z,ro
-
-secrets:
-  cert_bundle:
-    file: secrets/bundle.pem
+      - ./postgres_init.d:/docker-entrypoint-initdb.d:z,ro
+  redis:
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD-H733Kdjndks81}"
+  redis-cache:
+    environment:
+      REDIS_PASSWORD: "${REDIS_CACHE_PASSWORD-t4Ph722qJ5QHeQ1qfu36}"
