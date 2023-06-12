@@ -24,6 +24,7 @@ services:
       AUTH_LDAP_GROUP_SEARCH_FILTER: '(&(cn:dn:=groups))'
       AUTH_LDAP_MIRROR_GROUPS: 'true'
       REDIS_PASSWORD: "${REDIS_PASSWORD-H733Kdjndks81}"
+      NETBOX_DELETE_LEGACY_DATA: 1
       #LOGLEVEL: "DEBUG"
       #DB_WAIT_DEBUG: 1
   netbox-worker:
