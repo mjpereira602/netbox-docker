@@ -41,14 +41,11 @@
   
   podman-compose ${overrides} build 
   podman-compose ${overrides} up --detach
-  
-  retval=1 
-  while [ $retval -ne 0 ]
+
+  until podman-compose ${overrides} exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
   do
-    echo "checking...."
+    echo "checking..."
     sleep 5
-    podman-compose exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
-    retval=$?
   done
 
   #
@@ -114,14 +111,11 @@ SQL
 
   podman-compose ${overrides} build 
   podman-compose ${overrides} up --detach
-
-  retval=1 
-  while [ $retval -ne 0 ]
+  
+  until podman-compose ${overrides} exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
   do
-    echo "checking...."
+    echo "checking..."
     sleep 5
-    podman-compose exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
-    retval=$?
   done
 
   #
