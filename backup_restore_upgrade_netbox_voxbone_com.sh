@@ -25,7 +25,7 @@
   #  | gzip > backups/voxbone_backup_no_secrets.sql.gz
   #cp backups/voxbone_backup_no_secrets.sql.gz postgres_init.d/50_init.sql.gz
 
-  overrides="-f docker-compose.yml -f docker-compose.override.yml"
+  overrides="-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.override.migrate.yml"
   if [ "$(uname -s)" == 'Darwin' ]
   then
     overrides="${overrides} -f docker-compose.override.macosx.yml"
@@ -129,6 +129,7 @@ SQL
   #
   podman-compose exec -T postgres pg_dump --user netbox --dbname netbox \
   | gzip > postgres_init.d/50_init.sql.gz
+  cp postgres_init.d/50_init.sql.gz backups/voxbone_upgraded_backup.sql.gz
 
   podman-compose ${overrides} down -v
   podman volume prune -f
