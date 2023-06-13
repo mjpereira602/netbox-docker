@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: netbox:${VERSION-v3.5-2.6.1}-plugins
+    image: netbox:${VERSION-v3.5.2-2.6.1}-plugins
     build:
       context: .
       dockerfile: Dockerfile-Plugins

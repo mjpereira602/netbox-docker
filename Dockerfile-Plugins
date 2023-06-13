@@ -1,4 +1,4 @@
-FROM netboxcommunity/netbox:${VERSION:-v3.5-2.6.1}
+FROM netboxcommunity/netbox:${VERSION:-v3.5.2-2.6.1}
 
 COPY ./requirements-container-plugins.txt /
 
