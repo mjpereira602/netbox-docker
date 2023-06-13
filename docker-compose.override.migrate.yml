@@ -1,15 +1,10 @@
 version: '3.4'
 services:
-  netbox:
-    ports:
-      - "127.0.0.1:8000:8080"
   postgres:
-    ports:
-      - "127.0.0.1:5432:5432"
   mariadb:
     image: mariadb:10.3
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1::3306"
     command: [
       '--net_read_timeout=31536000',
       '--net_write_timeout=31536000',

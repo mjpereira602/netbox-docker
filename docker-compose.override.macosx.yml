@@ -1,15 +1,17 @@
 version: '3.4'
 services:
-  netbox: &netbox
-    volumes:
-    - ././configuration:/etc/netbox/config:ro
+  netbox:
+    ports:
+      - '127.0.0.1:8000:8080'
+    volumes: &volumes
+    - ./configuration:/etc/netbox/config:ro
     - netbox-media-files:/opt/netbox/netbox/media:rw
     - netbox-reports-files:/opt/netbox/netbox/reports:rw
     - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
   netbox-worker:
-    <<: *netbox
+    volumes: *volumes
   netbox-housekeeping:
-    <<: *netbox
+    volumes: *volumes
   postgres:
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data:rw
