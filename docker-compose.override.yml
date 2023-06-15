@@ -5,9 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-Plugins
-    #ports:
-    #  - "8000:8080"
-    environment:
+    ports:
+      - "127.0.0.1::8080"
+    environment: &environment
       SKIP_SUPERUSER: "${SKIP_SUPERUSER-false}"
       SUPERUSER_API_TOKEN: "${SUPERUSER_API_TOKEN-0123456789abcdef0123456789abcdef01234567}"
       SUPERUSER_EMAIL: "${SUPERUSER_EMAIL-admin@example.com}"
@@ -28,11 +28,13 @@ services:
       LOGLEVEL: "DEBUG"
       DB_WAIT_DEBUG: 1
   netbox-worker:
-    <<: *netbox
+    environment:
+      <<: *environment
   netbox-housekeeping:
-    <<: *netbox
+    environment:
+      <<: *environment
   postgres:
-    #ports:
-    #  - 5432:5432
+    ports:
+      - '127.0.0.1::5432'
     volumes:
     - ./postgres_init.d:/docker-entrypoint-initdb.d:z,ro
