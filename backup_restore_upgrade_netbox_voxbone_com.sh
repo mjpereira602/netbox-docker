@@ -25,7 +25,7 @@
   #  | gzip > backups/voxbone_backup_no_secrets.sql.gz
   #cp backups/voxbone_backup_no_secrets.sql.gz postgres_init.d/50_init.sql.gz
 
-  overrides="-f docker-compose.yml -f docker-compose.override.migrate.yml"
+  overrides="-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.override.migrate.yml"
   if [ "$(uname -s)" == 'Darwin' ]
   then
     overrides="${overrides} -f docker-compose.override.macosx.yml"
@@ -39,7 +39,7 @@
   git checkout bandwidth-3.4-2.5.3
   git pull --set-upstream origin bandwidth-3.4-2.5.3
   
-  podman-compose ${overrides} build 
+  podman-compose ${overrides} build
   podman-compose ${overrides} up --detach
 
   until podman-compose ${overrides} exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
