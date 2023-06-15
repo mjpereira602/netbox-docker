@@ -25,7 +25,7 @@
   #  | gzip > backups/voxbone_backup_no_secrets.sql.gz
   #cp backups/voxbone_backup_no_secrets.sql.gz postgres_init.d/50_init.sql.gz
 
-  overrides="-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.override.migrate.yml"
+  overrides="-f docker-compose.yml -f docker-compose.override.migrate.yml"
   if [ "$(uname -s)" == 'Darwin' ]
   then
     overrides="${overrides} -f docker-compose.override.macosx.yml"
@@ -51,7 +51,7 @@
   #
   # Create racktables_migration superuser account
   #
-  podman-compose exec netbox \
+  podman-compose ${overrides} exec netbox \
   /opt/netbox/venv/bin/python \
   ./manage.py \
   createsuperuser \
@@ -60,7 +60,7 @@
   --noinput
 
   # Create token for above account
-  cat<<EOF | podman-compose exec -T postgres psql --user netbox --dbname netbox
+  cat<<EOF | podman-compose ${overrides} exec -T postgres psql --user netbox --dbname netbox
 INSERT INTO users_token (created, key, write_enabled, description, user_id)
 SELECT
   NOW(),
@@ -76,7 +76,7 @@ EOF
   # Finish netbox-secretstore to netbox-secrets migration
   echo "BEGIN;" > secretstore_cleanup.sql
 
-  podman-compose exec -T netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py \
+  podman-compose ${overrides} exec -T netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py \
   sqlsequencereset netbox_secrets | \
   sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | \
   sed '1,/BEGIN;/d' | \
@@ -94,21 +94,21 @@ SQL
   rm secretstore_cleanup.sql
 
   # Recover ASNs and Contacts.
-  podman-compose exec -T netbox \
+  podman-compose ${overrides} exec -T netbox \
   curl -X POST "http://localhost:8080/api/extras/scripts/netbox_v32_migration.MigrateSiteASNsScript/" \
     -H "accept: application/json; indent=4" \
     -H "Content-Type: application/json" \
     -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
     --data '{ "data": { "clear_site_field": true }, "commit": true }'
 
-  podman-compose exec -T netbox \
+  podman-compose ${overrides} exec -T netbox \
   curl -X POST "http://localhost:8080/api/tenancy/contact-roles/" \
     -H "accept: application/json; indent=4" \
     -H "Content-Type: application/json" \
     -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
     --data '{ "name": "Site", "slug": "site", "description": "Site Contacts" }'
 
-  podman-compose exec -T netbox \
+  podman-compose ${overrides} exec -T netbox \
   curl -X POST "http://localhost:8080/api/extras/scripts/netbox_v32_migration.MigrateSiteContactsScript/" \
     -H "accept: application/json; indent=4" \
     -H "Content-Type: application/json" \
@@ -119,7 +119,7 @@ SQL
   ## backup database (overwriting our initial backup)
   ##
   #pg_dump -Z9 -f postgres_init.d/50_init.sql.gz --dbname=postgresql://netbox:J5brHrAXFLQSif0K@127.0.0.1:5432/netbox
-  podman-compose exec -T postgres pg_dump --user netbox --dbname netbox \
+  podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
   | gzip > postgres_init.d/50_init.sql.gz
   
   #
@@ -143,7 +143,7 @@ SQL
   #
   # backup upgraded voxbone database
   #
-  podman-compose exec -T postgres pg_dump --user netbox --dbname netbox \
+  podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
   | gzip > postgres_init.d/50_init.sql.gz
   cp postgres_init.d/50_init.sql.gz backups/voxbone_upgraded_backup.sql.gz
 
