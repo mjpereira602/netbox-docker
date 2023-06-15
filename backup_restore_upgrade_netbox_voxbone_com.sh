@@ -12,10 +12,10 @@
   #
   
   # With secrets
-  #ssh netbox-001.vit.pod2.cloud.voxbone.com \
-  #  "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
-  #  --no-owner --no-privileges" \
-  #  | gzip > backups/voxbone_backup.sql.gz
+  ssh netbox-001.vit.pod2.cloud.voxbone.com \
+    "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
+    --no-owner --no-privileges" \
+    | gzip > backups/voxbone_backup.sql.gz
   cp backups/voxbone_backup.sql.gz postgres_init.d/50_init.sql.gz
   
   # Without secrets
@@ -32,12 +32,13 @@
   fi
     
   #
-  # spool up 3.3.8 netbox to capture asn, contacts
+  # spool up 3.4 netbox to migrate secretstore to secrets
   #
   podman-compose ${overrides} down -v
   podman volume prune -f
-  git checkout bandwidth-3.3.8-2.3.0
-  git pull --set-upstream origin bandwidth-3.3.8-2.3.0
+  git checkout bandwidth-3.4-2.5.3
+  git pull --set-upstream origin bandwidth-3.4-2.5.3
+  
   podman-compose ${overrides} build 
   podman-compose ${overrides} up --detach
 
@@ -71,56 +72,6 @@ FROM auth_user
 WHERE username = 'racktables_migration'
 ON CONFLICT(key) DO NOTHING;
 EOF
-
-  read -p "Press any key to continue." -n1 -s
-
-  # Recover ASNs and Contacts.
-  podman-compose ${overrides} exec -T netbox \
-  curl -X POST "http://localhost:8080/api/extras/scripts/netbox_v32_migration.MigrateSiteASNsScript/" \
-    -H "accept: application/json; indent=4" \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
-    --data '{ "data": { "clear_site_field": true }, "commit": true }'
-
-  podman-compose ${overrides} exec -T netbox \
-  curl -X POST "http://localhost:8080/api/tenancy/contact-roles/" \
-    -H "accept: application/json; indent=4" \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
-    --data '{ "name": "Site", "slug": "site", "description": "Site Contacts" }'
-
-  podman-compose ${overrides} exec -T netbox \
-  curl -X POST "http://localhost:8080/api/extras/scripts/netbox_v32_migration.MigrateSiteContactsScript/" \
-    -H "accept: application/json; indent=4" \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
-    --data '{ "data": { "clear_site_fields": true, "contact_priority": "" }, "commit": true }'
-
-  ##
-  ## backup database (overwriting our initial backup)
-  ##
-  podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
-  | gzip > postgres_init.d/50_init.sql.gz
-
-
-  read -p "Press any key to continue." -n1 -s
-
-  #
-  # spool up 3.4 netbox to migrate secretstore to secrets
-  #
-  podman-compose ${overrides} down -v
-  podman volume prune -f
-  git checkout bandwidth-3.4-2.5.3
-  git pull --set-upstream origin bandwidth-3.4-2.5.3
-  
-  podman-compose ${overrides} build 
-  podman-compose ${overrides} up --detach
-
-  until podman-compose ${overrides} exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
-  do
-    echo "checking..."
-    sleep 5
-  done
 
   # Finish netbox-secretstore to netbox-secrets migration
   echo "BEGIN;" > secretstore_cleanup.sql
