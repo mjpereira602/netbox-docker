@@ -4,10 +4,12 @@
 # To learn how to build images with your required plugins
 # See https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
 
-# PLUGINS = ["netbox_bgp"]
+PLUGINS = [
+  "netbox_plugin_extensions",
+  "netbox_secretstore"
+]
 
-# PLUGINS_CONFIG = {
-#   "netbox_bgp": {
-#     ADD YOUR SETTINGS HERE
-#   }
-# }
+PLUGINS_CONFIG = {
+  "netbox_plugin_extensions": { },
+  "netbox_secretstore": { }
+}
