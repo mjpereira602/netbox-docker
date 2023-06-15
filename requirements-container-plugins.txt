@@ -1,2 +1,1 @@
-netbox-plugin-extensions==1.1.1
-netbox-secretstore==1.0.14
+netbox-secretstore==1.3

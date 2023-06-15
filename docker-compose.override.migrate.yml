@@ -31,9 +31,6 @@ services:
       DB_PASSWORD: "${POSTGRES_PASSWORD-J5brHrAXFLQSif0K}"
       #LOGLEVEL: "DEBUG"
       #DB_WAIT_DEBUG: 1
-    labels:
-      traefik.enable: "${TRAEFIK_ENABLE-false}"
-      local.migrate.build: "${COMPOSE_BUILD-0}"
   netbox-worker:
     image: netbox:v3.3.8-2.3.0-plugins
     environment:
