@@ -1,8 +1,6 @@
 version: '3.4'
 services:
   netbox:
-    ports:
-      - '127.0.0.1:8000:8080'
     volumes: &volumes
     - ./configuration:/etc/netbox/config:ro
     - netbox-media-files:/opt/netbox/netbox/media:rw

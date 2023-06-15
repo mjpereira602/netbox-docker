@@ -4,6 +4,8 @@ services:
     # If you want the Nginx unit status page visible from the
     # outside of the container add the following port mapping:
     # - "8001:8081"
+    ports:
+      - "127.0.0.1::8080"
     environment: &netbox_environment
       SKIP_SUPERUSER: "${SKIP_SUPERUSER-false}"
       SUPERUSER_API_TOKEN: "${SUPERUSER_API_TOKEN-0123456789abcdef0123456789abcdef01234567}"
@@ -25,6 +27,8 @@ services:
       DB_PASSWORD: "${POSTGRES_PASSWORD-J5brHrAXFLQSif0K}"
       #LOGLEVEL: "DEBUG"
       #DB_WAIT_DEBUG: 1
+    labels:
+      traefik.enable: "${TRAEFIK_ENABLE-false}"
   netbox-worker:
     environment:
       <<: *netbox_environment
