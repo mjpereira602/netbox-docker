@@ -12,10 +12,10 @@
   #
   
   # With secrets
-  ssh netbox-001.vit.pod2.cloud.voxbone.com \
-    "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
-    --no-owner --no-privileges" \
-    | gzip > backups/voxbone_backup.sql.gz
+  #ssh netbox-001.vit.pod2.cloud.voxbone.com \
+  #  "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
+  #  --no-owner --no-privileges" \
+  #  | gzip > backups/voxbone_backup.sql.gz
   cp backups/voxbone_backup.sql.gz postgres_init.d/50_init.sql.gz
   
   # Without secrets
