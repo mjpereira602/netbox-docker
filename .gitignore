@@ -13,3 +13,7 @@ configuration/ldap/*
 prometheus.yml
 super-linter.log
 venv
+.env
+mariadb_init.d/*
+
+
