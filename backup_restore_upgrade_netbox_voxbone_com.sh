@@ -93,6 +93,28 @@ SQL
   cat secretstore_cleanup.sql | podman-compose exec -T postgres psql --user netbox --dbname netbox
   rm secretstore_cleanup.sql
 
+  # Recover ASNs and Contacts.
+  podman-compose exec -T netbox \
+  curl -X POST "http://localhost:8080/api/extras/scripts/netbox_v32_migration.MigrateSiteASNsScript/" \
+    -H "accept: application/json; indent=4" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
+    --data '{ "data": { "clear_site_field": true }, "commit": true }'
+
+  podman-compose exec -T netbox \
+  curl -X POST "http://localhost:8080/api/tenancy/contact-roles/" \
+    -H "accept: application/json; indent=4" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
+    --data '{ "name": "Site", "slug": "site", "description": "Site Contacts" }'
+
+  podman-compose exec -T netbox \
+  curl -X POST "http://localhost:8080/api/extras/scripts/netbox_v32_migration.MigrateSiteContactsScript/" \
+    -H "accept: application/json; indent=4" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
+    --data '{ "data": { "clear_site_fields": true, "contact_priority": "" }, "commit": true }'
+
   ##
   ## backup database (overwriting our initial backup)
   ##
