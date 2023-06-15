@@ -28,9 +28,11 @@ services:
       LOGLEVEL: "DEBUG"
       DB_WAIT_DEBUG: 1
   netbox-worker:
+    image: localhost/netbox:v3.4-2.5.3-plugins
     environment:
       <<: *environment
   netbox-housekeeping:
+    image: localhost/netbox:v3.4-2.5.3-plugins
     environment:
       <<: *environment
   postgres:
