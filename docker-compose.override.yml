@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: netbox:v3.4-2.5.3-plugins
+    image: localhost/netbox:v3.4-2.5.3-plugins
     build:
       context: .
       dockerfile: Dockerfile-Plugins
@@ -25,8 +25,8 @@ services:
       AUTH_LDAP_MIRROR_GROUPS: 'true'
       REDIS_PASSWORD: "${REDIS_PASSWORD-H733Kdjndks81}"
       NETBOX_DELETE_LEGACY_DATA: 1
-      #LOGLEVEL: "DEBUG"
-      #DB_WAIT_DEBUG: 1
+      LOGLEVEL: "DEBUG"
+      DB_WAIT_DEBUG: 1
   netbox-worker:
     <<: *netbox
   netbox-housekeeping:
