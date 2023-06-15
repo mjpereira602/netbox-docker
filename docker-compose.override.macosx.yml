@@ -4,6 +4,8 @@ services:
     volumes: &volumes
     - ./configuration:/etc/netbox/config:ro
     - netbox-media-files:/opt/netbox/netbox/media:rw
+    - ./reports:/etc/netbox/reports:ro
+    - ./scripts:/etc/netbox/scripts:ro
   netbox-worker:
     volumes: *volumes
   netbox-housekeeping:
