@@ -32,13 +32,12 @@
   fi
     
   #
-  # spool up 3.4 netbox to migrate secrets application
+  # spool up 3.3.8 netbox to capture asn, contacts
   #
   podman-compose ${overrides} down -v
   podman volume prune -f
-  git checkout bandwidth-3.4-2.5.3
-  git pull --set-upstream origin bandwidth-3.4-2.5.3
-  
+  git checkout bandwidth-3.3.8-2.3.0
+  git pull --set-upstream origin bandwidth-3.3.8-2.3.0
   podman-compose ${overrides} build 
   podman-compose ${overrides} up --detach
 
@@ -73,25 +72,7 @@ WHERE username = 'racktables_migration'
 ON CONFLICT(key) DO NOTHING;
 EOF
 
-  # Finish netbox-secretstore to netbox-secrets migration
-  echo "BEGIN;" > secretstore_cleanup.sql
-
-  podman-compose ${overrides} exec -T netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py \
-  sqlsequencereset netbox_secrets | \
-  sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | \
-  sed '1,/BEGIN;/d' | \
-  sed "/COMMIT;/d" >> secretstore_cleanup.sql
-
-  cat >> secretstore_cleanup.sql <<SQL
-DROP TABLE IF EXISTS netbox_secretstore_secret;
-DROP TABLE IF EXISTS netbox_secretstore_secretrole;
-DROP TABLE IF EXISTS netbox_secretstore_sessionkey;
-DROP TABLE IF EXISTS netbox_secretstore_userkey;
-COMMIT;
-SQL
-
-  cat secretstore_cleanup.sql | podman-compose exec -T postgres psql --user netbox --dbname netbox
-  rm secretstore_cleanup.sql
+  read -p "Press any key to continue." -n1 -s
 
   # Recover ASNs and Contacts.
   podman-compose ${overrides} exec -T netbox \
@@ -114,6 +95,52 @@ SQL
     -H "Content-Type: application/json" \
     -H "Authorization: Token ${SUPERUSER_API_TOKEN}" \
     --data '{ "data": { "clear_site_fields": true, "contact_priority": "" }, "commit": true }'
+
+  ##
+  ## backup database (overwriting our initial backup)
+  ##
+  podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
+  | gzip > postgres_init.d/50_init.sql.gz
+
+
+  read -p "Press any key to continue." -n1 -s
+
+  #
+  # spool up 3.4 netbox to migrate secretstore to secrets
+  #
+  podman-compose ${overrides} down -v
+  podman volume prune -f
+  git checkout bandwidth-3.4-2.5.3
+  git pull --set-upstream origin bandwidth-3.4-2.5.3
+  
+  podman-compose ${overrides} build 
+  podman-compose ${overrides} up --detach
+
+  until podman-compose ${overrides} exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
+  do
+    echo "checking..."
+    sleep 5
+  done
+
+  # Finish netbox-secretstore to netbox-secrets migration
+  echo "BEGIN;" > secretstore_cleanup.sql
+
+  podman-compose ${overrides} exec -T netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py \
+  sqlsequencereset netbox_secrets | \
+  sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | \
+  sed '1,/BEGIN;/d' | \
+  sed "/COMMIT;/d" >> secretstore_cleanup.sql
+
+  cat >> secretstore_cleanup.sql <<SQL
+DROP TABLE IF EXISTS netbox_secretstore_secret;
+DROP TABLE IF EXISTS netbox_secretstore_secretrole;
+DROP TABLE IF EXISTS netbox_secretstore_sessionkey;
+DROP TABLE IF EXISTS netbox_secretstore_userkey;
+COMMIT;
+SQL
+
+  cat secretstore_cleanup.sql | podman-compose exec -T postgres psql --user netbox --dbname netbox
+  rm secretstore_cleanup.sql
 
   ##
   ## backup database (overwriting our initial backup)
