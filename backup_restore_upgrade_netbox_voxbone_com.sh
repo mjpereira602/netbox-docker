@@ -8,22 +8,9 @@
   source .env
 
   #
-  # Pull backup from netbox.voxbone.com
+  # Copy backup from parent directory
   #
-  
-  # With secrets
-  ssh netbox-001.vit.pod2.cloud.voxbone.com \
-    "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
-    --no-owner --no-privileges" \
-    | gzip > backups/voxbone_backup.sql.gz
-  cp backups/voxbone_backup.sql.gz postgres_init.d/50_init.sql.gz
-  
-  # Without secrets
-  #ssh netbox-001.vit.pod2.cloud.voxbone.com \
-  #  "pg_dump --dbname=postgresql://netbox:${VOXBONE_POSTGRES_PASS}@postgres-001.vit.pod2.cloud.voxbone.com:5432/netbox 2>pg_dump.errors \
-  #  --no-owner --no-privileges --exclude-table-data 'secrets*'" \
-  #  | gzip > backups/voxbone_backup_no_secrets.sql.gz
-  #cp backups/voxbone_backup_no_secrets.sql.gz postgres_init.d/50_init.sql.gz
+  cp ../backups/voxbone_backup.sql.gz postgres_init.d/50_init.sql.gz
 
   overrides="-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.override.migrate.yml"
   if [ "$(uname -s)" == 'Darwin' ]
@@ -123,7 +110,7 @@ SQL
   #
   podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
   | gzip > postgres_init.d/50_init.sql.gz
-  cp postgres_init.d/50_init.sql.gz backups/voxbone_upgraded_backup.sql.gz
+  cp postgres_init.d/50_init.sql.gz ../backups/voxbone_upgraded_backup.sql.gz
 
   podman-compose ${overrides} down -v
   podman volume prune -f
