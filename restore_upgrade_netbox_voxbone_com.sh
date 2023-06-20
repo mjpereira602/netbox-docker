@@ -5,7 +5,7 @@
 #
 {
   # Source variables
-  source .env
+  source ./.env
 
   #
   # Copy backup from parent directory
