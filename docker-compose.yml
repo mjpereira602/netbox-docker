@@ -1,29 +1,31 @@
 version: '3.4'
+x-netbox-common: &netbox
+  image: localhost/netbox:${VERSION:-v3.5.2-2.6.1}-plugins
+  depends_on:
+  - postgres
+  - redis
+  - redis-cache
+  expose:
+  - "8080"
+  - "8081"
+  env_file: env/netbox.env
+  user: 'unit:root'
+  healthcheck:
+    start_period: 60s
+    timeout: 3s
+    interval: 15s
+    test: "curl -f http://localhost:8080/api/ || exit 1"
+  volumes:
+  - ./configuration:/etc/netbox/config:z,ro
+  - netbox-media-files:/opt/netbox/netbox/media:z,rw
+  - netbox-reports-files:/opt/netbox/netbox/reports:z,rw
+  - netbox-scripts-files:/opt/netbox/netbox/scripts:z,rw
 services:
-  netbox: &netbox
-    image: localhost/netbox:${VERSION-v3.5.2-2.6.1}-plugins
+  netbox:
+    <<: *netbox
     build:
       context: .
       dockerfile: Dockerfile-Plugins
-    depends_on:
-    - postgres
-    - redis
-    - redis-cache
-    expose:
-    - "8080"
-    - "8081"
-    env_file: env/netbox.env
-    user: 'unit:root'
-    healthcheck:
-      start_period: 60s
-      timeout: 3s
-      interval: 15s
-      test: "curl -f http://localhost:8080/api/ || exit 1"
-    volumes:
-    - ./configuration:/etc/netbox/config:z,ro
-    - netbox-media-files:/opt/netbox/netbox/media:z,rw
-    - netbox-reports-files:/opt/netbox/netbox/reports:z,rw
-    - netbox-scripts-files:/opt/netbox/netbox/scripts:z,rw
   netbox-worker:
     <<: *netbox
     depends_on:
