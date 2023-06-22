@@ -1,4 +1,6 @@
-FROM netboxcommunity/netbox:${VERSION:-v3.5.2-2.6.1}
+ARG NETBOX_DOCKER_VERSION
+
+FROM netboxcommunity/netbox:$NETBOX_DOCKER_VERSION
 
 COPY ./requirements-container-plugins.txt /
 
@@ -11,5 +13,6 @@ RUN /opt/netbox/venv/bin/pip install -r /requirements-container-plugins.txt
 
 COPY configuration/configuration.py /etc/netbox/config/configuration.py
 COPY configuration/plugins.py /etc/netbox/config/plugins.py
+COPY configuration/extra.py /etc/netbox/config/extra.py
 
 RUN SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
