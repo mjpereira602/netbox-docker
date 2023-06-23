@@ -5,3 +5,4 @@ services:
       - '127.0.0.1::8080'
     labels:
       - 'traefik.enable=true'
+      - 'local.netbox.environments=${NETBOX_ENVS:-${COMPOSE_PROJECT_NAME}}'
