@@ -86,6 +86,7 @@ SQL
   #pg_dump -Z9 -f postgres_init.d/50_init.sql.gz --dbname=postgresql://netbox:J5brHrAXFLQSif0K@127.0.0.1:5432/netbox
   podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
   | gzip > postgres_init.d/50_init.sql.gz
+  cp postgres_init.d/50_init.sql.gz ../backups/voxbone_upgraded_backup.sql.gz
   
   #
   # Recreate netbox cluster with latest version
@@ -96,24 +97,25 @@ SQL
   git checkout bandwidth
   git pull --set-upstream origin bandwidth
 
-  podman-compose ${overrides} build 
-  podman-compose ${overrides} up --detach
+  # We will let the migrate script handle this.
+  #podman-compose ${overrides} build 
+  #podman-compose ${overrides} up --detach
   
-  until podman-compose ${overrides} exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
-  do
-    echo "checking..."
-    sleep 5
-  done
+  #until podman-compose ${overrides} exec -T netbox curl -f http://localhost:8080/api/ > /dev/null 2>&1
+  #do
+  #  echo "checking..."
+  #  sleep 5
+  #done
 
   #
   # backup upgraded voxbone database
   #
-  podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
-  | gzip > postgres_init.d/50_init.sql.gz
-  cp postgres_init.d/50_init.sql.gz ../backups/voxbone_upgraded_backup.sql.gz
+  #podman-compose ${overrides} exec -T postgres pg_dump --user netbox --dbname netbox \
+  #| gzip > postgres_init.d/50_init.sql.gz
+  #cp postgres_init.d/50_init.sql.gz ../backups/voxbone_upgraded_backup.sql.gz
 
-  podman-compose ${overrides} down -v
-  podman volume prune -f
+  #podman-compose ${overrides} down -v
+  #podman volume prune -f
 
   exit
 }
