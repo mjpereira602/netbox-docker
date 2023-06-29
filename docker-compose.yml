@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: Dockerfile-Plugins
       args:
-        NETBOX_DOCKER_VERSION: ${VERSION:-3.5.2-2.6.1}
+        NETBOX_DOCKER_VERSION: ${VERSION:-v3.5.2-2.6.1}
   netbox-worker:
     <<: *netbox
     depends_on:
