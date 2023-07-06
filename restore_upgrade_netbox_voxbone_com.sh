@@ -12,7 +12,7 @@
   #
   cp ../backups/voxbone.sql.gz postgres_init.d/50_init.sql.gz
 
-  overrides="-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.override.migrate.yml"
+  overrides="-f docker-compose.yml -f docker-compose.override.yml"
   if [ "$(uname -s)" == 'Darwin' ]
   then
     overrides="${overrides} -f docker-compose.override.macosx.yml"
