@@ -5,9 +5,6 @@
 # See https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
 
 # PLUGINS = ["netbox_bgp"]
-PLUGINS = [ 'netbox_secrets' ]
 
-
-PLUGINS_CONFIG = {
-  "netbox_secrets": {}
-}
+#PLUGINS_CONFIG = {
+#}
