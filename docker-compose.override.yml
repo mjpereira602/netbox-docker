@@ -27,6 +27,7 @@ services:
       DB_PASSWORD: "${POSTGRES_PASSWORD-J5brHrAXFLQSif0K}"
       NETBOX_DELETE_LEGACY_DATA: 1
       BANNER_TOP: "${BANNER_TOP:-}"
+      BACKUP_TIME: "${BACKUP_TIME:-}"
       #LOGLEVEL: "DEBUG"
       #DB_WAIT_DEBUG: 1
     labels:

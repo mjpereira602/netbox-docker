@@ -6,17 +6,17 @@ DEFAULT_DASHBOARD = [
     {
         'widget': 'extras.NoteWidget',
         'width': 12,
-        'height': 1,
+        'height': 2,
         'title': 'Netbox Demo Instance Notes',
         'color': 'blue',
         'config': {
-            'content': (
-		'This Netbox instance was built from netbox.voxbone.com and racktables.bandwidthclec.com data '
-                f"from approximately { environ.get('BACKUP_TIME' 'unknown') }.  \n"
-                '*All changes made to this instance will be overwritten on a regular basis*'
-                '* so feel free to experiment'
-                "* but please don't make wholesale changes (ie remove all vms or network prefixes)"
-            )
+            'content': f"""
+		        This Netbox instance was built from netbox.voxbone.com and racktables.bandwidthclec.com data
+                from approximately { environ.get('BACKUP_TIME' 'unknown') }.  
+                *All changes made to this instance will be overwritten on a regular basis*  
+                - so feel free to experiment
+                - but please don't make wholesale changes (ie remove all vms or network prefixes)
+            """
         }
     },
     {
