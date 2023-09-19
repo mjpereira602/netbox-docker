@@ -11,10 +11,10 @@ DEFAULT_DASHBOARD = [
         'color': 'blue',
         'config': {
             'content': (
-		        'This Netbox instance was built from netbox.voxbone.com and racktables.bandwidthclec.com data '
-                f"from approximately { environ.get('BACKUP_TIME' 'unknown') }.  \n",
-                '*All changes made to this instance will be overwritten on a regular basis*',
-                '* so feel free to experiment',
+		'This Netbox instance was built from netbox.voxbone.com and racktables.bandwidthclec.com data '
+                f"from approximately { environ.get('BACKUP_TIME' 'unknown') }.  \n"
+                '*All changes made to this instance will be overwritten on a regular basis*'
+                '* so feel free to experiment'
                 "* but please don't make wholesale changes (ie remove all vms or network prefixes)"
             )
         }
