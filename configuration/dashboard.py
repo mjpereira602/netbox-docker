@@ -12,11 +12,13 @@ DEFAULT_DASHBOARD = [
         'color': 'blue',
         'config': {
             'content': (
-                "This Netbox instance was built from netbox.voxbone.com and racktables.bandwidthclec.com data "
-                f"from approximately { BACKUP_TIME }  \n" 
-                "**All changes made to this instance will be overwritten on a regular basis**  \n"
-                " * so feel free to experiment  \n"
-                " * but please don't make wholesale changes (ie remove all vms or network prefixes)  \n"
+                "This Netbox instance is rebuilt from netbox.voxbone.com and racktables.bandwidthclec.com data on a regular basis"
+                "* netbox.voxbone.com and racktables.bandwidthclec.com are the canonical sources of truth at this point in time."
+                "    * make actual changes to the above sources"
+                "* this instance reflects source data from approximately { BACKUP_TIME }" 
+                "* **All changes made to this instance will be overwritten on a regular basis**"
+                "    * so feel free to experiment with objects that your team owns"
+                "    * but please don't make wholesale changes that will confuse other coworkers (ie remove all vms or network prefixes, etc)"
             )
         }
     },
