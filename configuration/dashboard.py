@@ -11,12 +11,12 @@ DEFAULT_DASHBOARD = [
         'title': 'Netbox Demo Instance Notes',
         'color': 'blue',
         'config': {
-            'content': (
-                f"This Netbox instance is rebuilt from netbox.voxbone.com and racktables.bandwidthclec.com data from approximately { BACKUP_TIME }  \n"
-                "* netbox.voxbone.com and racktables.bandwidthclec.com are the canonical sources of truth at this point in time.  \n"
-                "* make actual changes to the above sources  \n"
-                "* **All changes made to this instance will be overwritten on a regular basis**  \n"
-            )
+            'content': f"""
+This Netbox instance is rebuilt from netbox.voxbone.com and racktables.bandwidthclec.com data from approximately { BACKUP_TIME }.  
+* netbox.voxbone.com and racktables.bandwidthclec.com are the canonical sources of truth at this point in time.  
+* make actual changes to the above sources  
+* **All changes made to this instance will be overwritten on a regular basis**  
+"""
         }
     },
     {
