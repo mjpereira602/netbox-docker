@@ -13,9 +13,10 @@ DEFAULT_DASHBOARD = [
         'config': {
             'content': f"""
 This Netbox instance is rebuilt from netbox.voxbone.com and racktables.bandwidthclec.com data from approximately { BACKUP_TIME }.  
-* netbox.voxbone.com and racktables.bandwidthclec.com are the canonical sources of truth at this point in time.  
-* make actual changes to the above sources  
-* **All changes made to this instance will be overwritten on a regular basis**  
+  
+netbox.voxbone.com and racktables.bandwidthclec.com are the canonical sources of truth at this point in time.  
+Make actual changes to the above sources  
+**All changes made to this instance will be overwritten on a regular basis**  
 """
         }
     },
