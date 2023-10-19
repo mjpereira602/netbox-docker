@@ -15,8 +15,10 @@ DEFAULT_DASHBOARD = [
 This Netbox instance is built from netbox.voxbone.com and racktables.bandwidthclec.com data from approximately { BACKUP_TIME }.  
   
 netbox.voxbone.com and racktables.bandwidthclec.com are the canonical sources of truth at this point in time.  
-Make actual changes to the above sources  
+Make actual changes to the above sources.  
 **All changes made to this instance will be overwritten on a regular basis**  
+  
+Additional status information and known issues available at <https://bandwidth-jira.atlassian.net/wiki/x/CwByHAE>.
 """
         }
     },
